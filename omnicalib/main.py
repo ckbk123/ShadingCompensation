@@ -87,7 +87,7 @@ def main(detections: Dict, degree: int, threshold: float, count: int,
             ylabel=f'Radius / Image {min_dim_str}'
         )
         fig.savefig('thetar_curve.pdf', dpi=300)
-        plt.show()
+        # plt.show()
     except Exception as e:
         import sys
         sys.stderr.write(str(e))

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from omnicalib.projection import project_poly_thetar
 import camera_coords_to_image_intrinsic as intrinsic
 
-def compute_diffuse_shading_factor(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov):
+def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov):
     print("Calculating diffuse shading factor")
 
     ## create a photo

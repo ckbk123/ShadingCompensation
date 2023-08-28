@@ -1,29 +1,44 @@
 # This is a sample Python script.
 
-import camera_coords_to_image_intrinsic as intrinsic
-import astropy_to_camera_extrinsic as extrinsic
-import import_camera_intrinsic_function as import_cam_model
-import compute_diffuse_shading_factor as diffuse
-import read_image_file as read_im
+from astropy_to_camera_extrinsic import astropy_to_camera_extrinsic
+from camera_coords_to_image_intrinsic import camera_coords_to_image_intrinsic
+from compute_diffuse_shading_factor import compensate_diffuse_irradiance
+from compute_direct_shading_factor import compensate_direct_irradiance
+from import_camera_intrinsic_function import import_camera_intrinsic_function
+from read_image_file import read_image_file
+from retrieve_PVGIS_irradiance import retrieve_PVGIS_irradiance
+from sunpath_from_astropy import sunpath_from_astropy
+from calibrate_camera import calibrate_camera
+
 import numpy as np
+import matplotlib.pyplot as plt
 
 import torch as torch
 
-def print_hi(name):
-    poly_incident_angle_to_radius, principal_point, estimated_fov = import_cam_model.import_camera_intrinsic_function()
-    #
-    # # # Use a breakpoint in the code line below to debug your script.
-    camera_homo_coords = extrinsic.astropy_to_camera_extrinsic([np.array([30,60]),np.array([60,30])], 20, 10)
-    image_coords = intrinsic.camera_coords_to_image_intrinsic(camera_homo_coords, poly_incident_angle_to_radius, principal_point)
+def irradianceforecast():
+    calibrate_camera(6, 9, 22, './CalibrationImages/*.jpg')
 
-    image = read_im.read_image_file()
-    diffuse.compute_diffuse_shading_factor(image, np.array([100,200,300,400]), poly_incident_angle_to_radius, principal_point, estimated_fov)
+    # poly_incident_angle_to_radius, principal_point, estimated_fov = import_camera_intrinsic_function()
+    #
+    # image, image_size = read_image_file()
+    #
+    # direct_irradiance, diffuse_irradiance, time_array = retrieve_PVGIS_irradiance(43.57, 1.46, 2014, 2015, inclination=8, orientation=42)
+    #
+    # astropy_coords = sunpath_from_astropy(43.57, 1.46, 151, time_array)
+    #
+    # compensated_diffuse = compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov)
+    #
+    # compensated_direct = compensate_direct_irradiance(image, image_size, poly_incident_angle_to_radius, principal_point, 20, 10, estimated_fov, astropy_coords, direct_irradiance, time_array)
+    #
+    # final_irradiance = compensated_direct + compensated_diffuse
+    # plt.plot(time_array, final_irradiance)
+    # plt.show()
 
 
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    irradianceforecast()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

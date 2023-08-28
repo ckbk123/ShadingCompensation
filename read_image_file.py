@@ -22,4 +22,4 @@ def read_image_file():
         print("PROGRAM TERMINATED PREMATURELY!")
         sys.exit()
 
-    return image_to_convert
+    return image_to_convert, im_height
