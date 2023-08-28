@@ -3,8 +3,11 @@ import torch
 import cv2
 from tqdm import tqdm
 from omnicalib.projection import project_poly_thetar
+import camera_coords_to_image_intrinsic as intrinsic
 
 def compute_diffuse_shading_factor(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov):
+    print("Calculating diffuse shading factor")
+
     ## create a photo
     azimuth_length = 1000
     zenith_length = 500
@@ -26,15 +29,21 @@ def compute_diffuse_shading_factor(image, diffuse_irradiance, poly_incident_angl
     azimuth_remapped = horizontal_index*2*np.pi/azimuth_length
     zenith_remapped = np.arccos(1-(vertical_index+1)/true_90)
 
-    ############################### this section is slow AF #####################################
-    # to be improved!
-    for hor in tqdm(horizontal_index):
-        for ver in vertical_index:
-            x_prime = np.cos(azimuth_remapped[hor])*np.tan(zenith_remapped[ver])
-            y_prime = np.sin(azimuth_remapped[hor])*np.tan(zenith_remapped[ver])
+    # create a meshgrid of coordinates. Note that the zenith section is in one mat zenith_mat and azimuth is in the other mat
+    zenith_mat, azimuth_mat = np.meshgrid(zenith_remapped, azimuth_remapped, indexing='ij')
 
-            equi_point = project_poly_thetar(torch.Tensor([x_prime, y_prime, 1.]), poly_incident_angle_to_radius, torch.Tensor(principal_point), False).numpy().astype(int)
-            conformal_image[ver][hor] = image[equi_point[0]][equi_point[1]]
+    # multiply those two mat to create the max of x_prime and y_prime
+    x_prime = np.multiply(np.cos(azimuth_mat), np.tan(zenith_mat))
+    y_prime = np.multiply(np.sin(azimuth_mat), np.tan(zenith_mat))
+
+    # stack x_prime and y_prime to create a matrix of coordinate pairs. This could be used directly with intrinsic.camera_coords_to_image_intrinsic
+    xy_coord_matrix = np.stack((x_prime,y_prime),axis=2)
+
+    equi_point = intrinsic.camera_coords_to_image_intrinsic(xy_coord_matrix.tolist(), poly_incident_angle_to_radius, principal_point)
+
+    for hor in horizontal_index:
+        for ver in vertical_index:
+            conformal_image[ver][hor] = image[equi_point[ver][hor][0]][equi_point[ver][hor][1]]
 
     # write the conformal image for debugging purposes
     cv2.imwrite('./DebugData/conformal_image.jpg', conformal_image)
@@ -42,4 +51,5 @@ def compute_diffuse_shading_factor(image, diffuse_irradiance, poly_incident_angl
     # note that we use the true_90 instead of zenith length because this will maximize the shading factor
     diffuse_coeff = (azimuth_length*true_90 - cv2.sumElems(conformal_image)[0] / 255) / (azimuth_length*true_90)
 
+    print('Diffuse shading factor is around ', str(diffuse_coeff))
     return (1-diffuse_coeff)*diffuse_irradiance         # this essentially returns the diffuse component after compensated with shadings

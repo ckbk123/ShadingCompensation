@@ -29,8 +29,5 @@ def astropy_to_camera_extrinsic (astropy_coords, psi, omega):
     # (x',y',z') basis to camera basis, but we add 1 to the mix
     x_c = x_prime/(np.sin(omega)*y_prime + np.cos(omega))
     y_c = (np.cos(omega)*y_prime - np.sin(omega))/(np.sin(omega)*y_prime + np.cos(omega))
-    z_c = np.ones(len(y_c))
 
-    camera_homo_coords = np.ndarray.tolist(np.matrix.transpose(np.array([x_c, y_c, z_c])))
-
-    return camera_homo_coords
+    return np.array([x_c,y_c]).T.tolist()
