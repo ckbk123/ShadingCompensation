@@ -37,8 +37,8 @@ def calibrate_camera(pattern_cols, pattern_rows, square_size, calibration_direct
         img_bw = cv2.imread(fname, cv2.IMREAD_GRAYSCALE)
 
         # check for 2 things: image need to be 1000x1000pixels square
-        assert img_bw.shape[0] == img_bw.shape[1], "The image need to be square"
-        assert img_bw.shape[0] == 1000, "Calibration and sky image should be 1000x1000 pixels"
+        # assert img_bw.shape[0] == img_bw.shape[1], "The image need to be square"
+        # assert img_bw.shape[0] == 1000, "Calibration and sky image should be 1000x1000 pixels"
 
         ret, corners = cv2.findChessboardCorners(img_bw, CHECKERBOARD,
                                                  cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE)

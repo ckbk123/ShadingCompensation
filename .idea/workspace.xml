@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ca3e505-9849-49b2-8b74-492818492626" name="Changes" comment="- Modified compute_diffuse_shading_factor.py to vectorize the calculation of the image coordinates, now runs in &lt;1s instead of 45s&#10;- Changed the data type out of camera_coords_to_image_intrinsic. Now it receives a [x_c,y_c] list/np.array and generate directly the list of image coordinates, padding ones no more needed">
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003515.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003526.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003537.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003600.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003630.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003645.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003705.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003707.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003717.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003722.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003726.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003735.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003739.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003746.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003755.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003802.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003805.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003807.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003809.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003811.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003814.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CalibrationImages/20230406_003816.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/calibrate_camera.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/retrieve_PVGIS_irradiance.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sunpath_from_astropy.py" afterDir="false" />
+    <list default="true" id="8ca3e505-9849-49b2-8b74-492818492626" name="Changes" comment="- Added the calibration function calibrate_camera.&#10;HMM: there's something that may cause it to fail because there was indicator from another function that looks exactly the same, must find out why&#10;- Direct and diffuse irradiance are all confirmed to work.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera_coords_to_image_intrinsic.py" beforeDir="false" afterPath="$PROJECT_DIR$/camera_coords_to_image_intrinsic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003515.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003526.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003537.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003600.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003630.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003645.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003705.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003707.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003717.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003722.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003726.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003735.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003739.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003746.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003755.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003802.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003805.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003807.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003809.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003811.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003814.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CalibrationImages/20230406_003816.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DebugData/conformal_image.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/DebugData/conformal_image.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SkyImageOfSite/picture_sky_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibrate_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/calibrate_camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calibration.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_diffuse_shading_factor.py" beforeDir="false" afterPath="$PROJECT_DIR$/compute_diffuse_shading_factor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_direct_shading_factor.py" beforeDir="false" afterPath="$PROJECT_DIR$/compute_direct_shading_factor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/final_solution.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/final_solution.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/import_camera_intrinsic_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/import_camera_intrinsic_function.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/initial_solution.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/initial_solution.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/omnicalib/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/omnicalib/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimized_solution.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/optimized_solution.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/read_image_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/read_image_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rz_curve.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/rz_curve.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thetar_curve.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/thetar_curve.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,12 +57,13 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/astropy_to_camera_extrinsic.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/calibrate_camera.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/camera_coords_to_image_intrinsic.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/compute_diffuse_shading_factor.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/compute_diffuse_shading_factor.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/compute_direct_shading_factor.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/import_camera_intrinsic_function.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/import_camera_intrinsic_function.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/read_image_file.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/read_image_file.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/retrieve_PVGIS_irradiance.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/sunpath_from_astropy.py" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -70,11 +76,11 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "C:/Users/baokh/Documents/fisheye_to_equirectangular_v2/CalibrationImages"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/baokh/Documents/fisheye_to_equirectangular_v2/CalibrationImages&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\baokh\Documents\fisheye_to_equirectangular_v2\CalibrationImages" />
@@ -121,7 +127,21 @@
       <option name="project" value="LOCAL" />
       <updated>1693221379872</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="- Added the calibration function calibrate_camera.&#10;HMM: there's something that may cause it to fail because there was indicator from another function that looks exactly the same, must find out why&#10;- Direct and diffuse irradiance are all confirmed to work.">
+      <created>1693247694861</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1693247694861</updated>
+    </task>
+    <task id="LOCAL-00003" summary="- Added the calibration function calibrate_camera.&#10;HMM: there's something that may cause it to fail because there was indicator from another function that looks exactly the same, must find out why&#10;- Direct and diffuse irradiance are all confirmed to work.">
+      <created>1693247737585</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1693247737585</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -137,6 +157,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Modified compute_diffuse_shading_factor.py to vectorize the calculation of the image coordinates, now runs in &lt;1s instead of 45s&#10;- Changed the data type out of camera_coords_to_image_intrinsic. Now it receives a [x_c,y_c] list/np.array and generate directly the list of image coordinates, padding ones no more needed" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Modified compute_diffuse_shading_factor.py to vectorize the calculation of the image coordinates, now runs in &lt;1s instead of 45s&#10;- Changed the data type out of camera_coords_to_image_intrinsic. Now it receives a [x_c,y_c] list/np.array and generate directly the list of image coordinates, padding ones no more needed" />
+    <MESSAGE value="- Added the calibration function calibrate_camera.&#10;HMM: there's something that may cause it to fail because there was indicator from another function that looks exactly the same, must find out why&#10;- Direct and diffuse irradiance are all confirmed to work." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added the calibration function calibrate_camera.&#10;HMM: there's something that may cause it to fail because there was indicator from another function that looks exactly the same, must find out why&#10;- Direct and diffuse irradiance are all confirmed to work." />
   </component>
 </project>

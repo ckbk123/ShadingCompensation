@@ -17,9 +17,4 @@ def read_image_file():
     print('IMPORTANT REMINDER: the image must be in black and white!! Script DOES NOT CHECK FOR THIS.')
     print('Detected image shape H x W : ', im_height, 'px x ', im_width, 'px')
 
-    if im_height != im_width or im_height != 1000:
-        print("Image must be square, dimensions 1000px by 1000px")
-        print("PROGRAM TERMINATED PREMATURELY!")
-        sys.exit()
-
-    return image_to_convert, im_height
+    return image_to_convert, im_height, im_width

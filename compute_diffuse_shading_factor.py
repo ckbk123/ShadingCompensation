@@ -1,11 +1,8 @@
 import numpy as np
-import torch
 import cv2
-from tqdm import tqdm
-from omnicalib.projection import project_poly_thetar
-import camera_coords_to_image_intrinsic as intrinsic
+from camera_coords_to_image_intrinsic import camera_coords_to_image_intrinsic
 
-def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov):
+def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov, im_height, im_width):
     print("Calculating diffuse shading factor")
 
     ## create a photo
@@ -21,10 +18,6 @@ def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle
     horizontal_index = np.linspace(0, azimuth_length-1, azimuth_length, True, False, 'int')
     vertical_index = np.linspace(0, zenith_length-1, zenith_length, True, False, 'int')
 
-    # create a blank canvas utilizing the azimuth_length and zenith_length values
-    # the dtype=np.unit8 is important to make the imshow function understand how to plot the image.
-    conformal_image = np.zeros((zenith_length, azimuth_length), dtype=np.uint8)
-
     # each point on the conformal image has an equivalent azimuth and zenith
     azimuth_remapped = horizontal_index*2*np.pi/azimuth_length
     zenith_remapped = np.arccos(1-(vertical_index+1)/true_90)
@@ -39,11 +32,22 @@ def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle
     # stack x_prime and y_prime to create a matrix of coordinate pairs. This could be used directly with intrinsic.camera_coords_to_image_intrinsic
     xy_coord_matrix = np.stack((x_prime,y_prime),axis=2)
 
-    equi_point = intrinsic.camera_coords_to_image_intrinsic(xy_coord_matrix.tolist(), poly_incident_angle_to_radius, principal_point)
+    # this contains all the image coords of the remapped points
+    equi_point = camera_coords_to_image_intrinsic(xy_coord_matrix.tolist(), poly_incident_angle_to_radius, principal_point)
 
-    for hor in horizontal_index:
-        for ver in vertical_index:
-            conformal_image[ver][hor] = image[equi_point[ver][hor][0]][equi_point[ver][hor][1]]
+    # create a blank canvas utilizing the azimuth_length and zenith_length values
+    # the dtype=np.unit8 is important to make the imshow function understand how to plot the image.
+    # this section is a bit confusing... OpenCV/Omnicalib convention is x to the right, y to the bottom, z into image
+    # while accessing the image manually would have the first argument toward the bottom and second argument to the right
+    # this means that the first component in the equi_point is actually the HORIZONTAL coordinates and the second component is the VERTICAL COORDINATES
+    # so you need to check the [0] component with im_width and [1] with im_height
+    # then the access is done as image[equi_point[ver][hor][1]][equi_point[ver][hor][0]]
+    conformal_image = np.zeros((zenith_length, azimuth_length), dtype=np.uint8)
+
+    for ver in vertical_index:
+        for hor in horizontal_index:
+            if equi_point[ver][hor][0] >= 0 and equi_point[ver][hor][0] < im_width and equi_point[ver][hor][1] >= 0 and equi_point[ver][hor][1] < im_height:
+                    conformal_image[ver][hor] = image[equi_point[ver][hor][1]][equi_point[ver][hor][0]]
 
     # write the conformal image for debugging purposes
     cv2.imwrite('./DebugData/conformal_image.jpg', conformal_image)

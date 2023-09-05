@@ -16,23 +16,24 @@ import matplotlib.pyplot as plt
 import torch as torch
 
 def irradianceforecast():
-    calibrate_camera(6, 9, 22, './CalibrationImages/*.jpg')
+    # calibrate_camera(6, 9, 22, './CalibrationImagesDebug/*.jpg')
 
-    # poly_incident_angle_to_radius, principal_point, estimated_fov = import_camera_intrinsic_function()
+    poly_incident_angle_to_radius, principal_point, estimated_fov = import_camera_intrinsic_function()
+
+    image, im_height, im_width = read_image_file()
     #
-    # image, image_size = read_image_file()
+    direct_irradiance, diffuse_irradiance, time_array = retrieve_PVGIS_irradiance(43.57, 1.46, 2014, 2015, inclination=8, orientation=42)
     #
-    # direct_irradiance, diffuse_irradiance, time_array = retrieve_PVGIS_irradiance(43.57, 1.46, 2014, 2015, inclination=8, orientation=42)
+    astropy_coords = sunpath_from_astropy(43.57, 1.46, 151, time_array)
     #
-    # astropy_coords = sunpath_from_astropy(43.57, 1.46, 151, time_array)
+    compensated_diffuse = compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov, im_height, im_width)
     #
-    # compensated_diffuse = compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov)
+    compensated_direct = compensate_direct_irradiance(image, im_height, im_width, poly_incident_angle_to_radius, principal_point, 20, 10, estimated_fov, astropy_coords, direct_irradiance, time_array)
     #
-    # compensated_direct = compensate_direct_irradiance(image, image_size, poly_incident_angle_to_radius, principal_point, 20, 10, estimated_fov, astropy_coords, direct_irradiance, time_array)
-    #
-    # final_irradiance = compensated_direct + compensated_diffuse
-    # plt.plot(time_array, final_irradiance)
-    # plt.show()
+    final_irradiance = compensated_direct + compensated_diffuse
+    # final_irradiance = direct_irradiance + diffuse_irradiance
+    plt.plot(time_array, final_irradiance)
+    plt.show()
 
 
 
