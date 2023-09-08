@@ -1,9 +1,10 @@
 import numpy as np
 import cv2
 from camera_coords_to_image_intrinsic import camera_coords_to_image_intrinsic
+from colorama import Fore, Style
 
 def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle_to_radius, principal_point, estimated_fov, im_height, im_width):
-    print("Calculating diffuse shading factor")
+    print(f"{Fore.YELLOW}Calculating diffuse shading factor...{Style.RESET_ALL}")
 
     ## create a photo
     azimuth_length = 1000
@@ -49,11 +50,8 @@ def compensate_diffuse_irradiance(image, diffuse_irradiance, poly_incident_angle
             if equi_point[ver][hor][0] >= 0 and equi_point[ver][hor][0] < im_width and equi_point[ver][hor][1] >= 0 and equi_point[ver][hor][1] < im_height:
                     conformal_image[ver][hor] = image[equi_point[ver][hor][1]][equi_point[ver][hor][0]]
 
-    # write the conformal image for debugging purposes
-    cv2.imwrite('./DebugData/conformal_image.jpg', conformal_image)
-
     # note that we use the true_90 instead of zenith length because this will maximize the shading factor
     diffuse_coeff = (azimuth_length*true_90 - cv2.sumElems(conformal_image)[0] / 255) / (azimuth_length*true_90)
 
-    print('Diffuse shading factor is around ', str(diffuse_coeff))
+    print(f'{Fore.GREEN}Diffuse shading factor is around ' + str(round(diffuse_coeff, 2)) + f'{Style.RESET_ALL}')
     return (1-diffuse_coeff)*diffuse_irradiance         # this essentially returns the diffuse component after compensated with shadings

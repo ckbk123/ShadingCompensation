@@ -1,8 +1,11 @@
 import astropy.coordinates as coord
 from astropy.time import Time
 import astropy.units as u
+from colorama import Fore, Style
 
 def sunpath_from_astropy(longitude, latitude, ground_level, time_array):
+    print(f'{Fore.YELLOW}Using AstroPy to get the solar position relatively to the location for every timestamps of the irradiance data...{Style.RESET_ALL}')
+
     astropy_time = Time(time_array)
     deployment_location = coord.EarthLocation(lat=latitude * u.deg, lon=longitude * u.deg, height=ground_level * u.m)
 
@@ -18,5 +21,7 @@ def sunpath_from_astropy(longitude, latitude, ground_level, time_array):
     # but no worries the extrinsic function took care of this
     zen_array = (sun_pos_array.zen).value
     az_array = (sun_pos_array.az).value
+
+    print(f'{Fore.GREEN}Finished computing the solar trajectory over the estimation period.{Style.RESET_ALL}')
 
     return [az_array, zen_array]

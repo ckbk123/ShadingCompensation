@@ -4,9 +4,10 @@ import cv2
 from camera_coords_to_image_intrinsic import camera_coords_to_image_intrinsic
 from astropy_to_camera_extrinsic import astropy_to_camera_extrinsic
 
+from colorama import Fore, Style
 
 def compensate_direct_irradiance(image, im_height, im_width, poly_incident_angle_to_radius, principal_point, orientation, inclination, estimated_fov, az_zen_array, direct_irradiance, original_time_array):
-    print("Computing the direct shading factor...")
+    print(f"{Fore.YELLOW}Computing the direct shading factor...{Style.RESET_ALL}")
     direct_shading_factor = np.ones(len(direct_irradiance))
 
     # this section is to remove the regions where the zenith goes over the estimated fov
@@ -36,5 +37,5 @@ def compensate_direct_irradiance(image, im_height, im_width, poly_incident_angle
                 direct_shading_factor[index_array[i]] = cv2.sumElems(masked_im)[0] / cv2.sumElems(mask_im)[0]
 
     compensated_direct_irradiance = np.multiply(direct_irradiance, 1-direct_shading_factor)
-    print("Finished compensating direct irradiance with direct shading factor")
+    print(f"{Fore.GREEN}Finished compensating direct irradiance with direct shading factor{Style.RESET_ALL}")
     return compensated_direct_irradiance

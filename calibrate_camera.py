@@ -2,9 +2,8 @@
 import omnicalib as omni
 import cv2
 import numpy as np
-import glob
+from glob import glob
 import torch
-import os
 
 from omnicalib.chessboard import get_points
 
@@ -27,7 +26,7 @@ def calibrate_camera(pattern_cols, pattern_rows, square_size, calibration_direct
     detections = {}
 
     # Extracting path of individual image stored in a given directory
-    images = glob.glob(calibration_directory)
+    images = glob(calibration_directory)
 
     # number of images that we managed to detect the checkerboard corners
     nb_images_used_for_calib = 0
